@@ -18,7 +18,6 @@ library
   exposed-modules:     Lib
   build-depends:       base >= 4.7 && < 5
                      , vector-space >= 0.10.4
-                     , multiset >= 0.3.3
   default-language:    Haskell2010
 
 executable music-geometry-exe

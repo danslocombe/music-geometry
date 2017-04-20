@@ -7,7 +7,7 @@ module Lib where
 
 import Data.VectorSpace
 import Data.Maybe (fromJust)
-import qualified Data.MultiSet as MS
+import Control.Applicative
 
 import Utils
 
@@ -33,6 +33,10 @@ instance VectorSpace (QuotientSpace a b) where
 
 type Pitch = QuotientSpace Int (EqClass Int)
 
+type Chord = [Pitch]
+
+newtype PitchDist = PitchDist Int deriving (Num, Ord, Eq, Show)
+
 octaves :: EqClass Int
 octaves = EqClass $ iterate (+12) 0 
 
@@ -40,8 +44,6 @@ note :: Int -> Pitch
 note = (flip QuotientSpace) octaves
 
 middleC = note (4 * 12)
-
-newtype PitchDist = PitchDist Int deriving (Num, Ord, Eq, Show)
 
 pitchClosestZero :: Pitch -> PitchDist
 pitchClosestZero p = min dist dist'
@@ -56,4 +58,5 @@ pitchClosestZero p = min dist dist'
 pitchDist :: Pitch -> Pitch -> PitchDist
 pitchDist p p' = abs $ pitchClosestZero p - pitchClosestZero p'
 
-type Chord = MS.MultiSet Pitch
+chordDist :: Chord -> Chord -> [PitchDist]
+chordDist = (<*>) . (pitchDist <$>)
